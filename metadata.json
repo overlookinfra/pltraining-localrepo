@@ -1,0 +1,22 @@
+{
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": "3.7.x"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": "3.x"
+    }
+  ],
+  "name": "pltraining-localrepo",
+  "version": "0.0.1",
+  "author": "pltraining",
+  "summary": "Add local yum repos to Education VMs. Not for general use.",
+  "license": "Apache 2.0",
+  "source": "https://github.com/puppetlabs/pltraining-localrepo",
+  "project_page": "https://github.com/puppetlabs/pltraining-localrepo",
+  "issues_url": "https://github.com/puppetlabs/pltraining-localrepo/issues",
+  "description": "Add local yum repos to Education VMs. Not for general use",
+  "dependencies": [  ]
+}
