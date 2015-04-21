@@ -32,12 +32,12 @@ class localrepo {
   $directories = [ "${base}",
                    "${base}/mirror",
                    "${base}/mirror/epel",
-                   "${base}/mirror/epel/6",
-                   "${base}/mirror/epel/6/local",
+                   "${base}/mirror/epel/${::operatingsystemmajrelease}",
+                   "${base}/mirror/epel/${::operatingsystemmajrelease}/local",
                    "${base}/mirror/centos",
-                   "${base}/mirror/centos/6",
-                   "${base}/mirror/centos/6/os",
-                   "${base}/mirror/centos/6/updates", ]
+                   "${base}/mirror/centos/${::operatingsystemmajrelease}",
+                   "${base}/mirror/centos/${::operatingsystemmajrelease}/os",
+                   "${base}/mirror/centos/${::operatingsystemmajrelease}/updates", ]
 
   File { mode => 644, owner => root, group => root }
 
@@ -53,14 +53,14 @@ class localrepo {
   ## Build the "base" repo
   localrepo::pkgsync { "base_pkgs":
     pkglist  => template("localrepo/base_pkgs.erb"),
-    repopath => "${base}/mirror/centos/6/os/$::architecture",
+    repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/os/$::architecture",
     syncer   => "yumdownloader",
     source   => "base",
     notify   => Repobuild["base_local"],
   }
 
   localrepo::repobuild { "base_local":
-    repopath => "${base}/mirror/centos/6/os/$::architecture",
+    repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/os/$::architecture",
     require  => Package["createrepo"],
     notify   => Exec["makecache"],
   }
@@ -68,14 +68,14 @@ class localrepo {
   ## Build the "updates" repo
   localrepo::pkgsync { "updates_pkgs":
     pkglist  => template("localrepo/updates_pkgs.erb"),
-    repopath => "${base}/mirror/centos/6/updates/$::architecture",
+    repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/updates/$::architecture",
     syncer   => "yumdownloader",
     source   => "base",
     notify   => Repobuild["updates_local"],
   }
 
   localrepo::repobuild { "updates_local":
-    repopath => "${base}/mirror/centos/6/updates/$::architecture",
+    repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/updates/$::architecture",
     require  => Package["createrepo"],
     notify   => Exec["makecache"],
   }
@@ -83,7 +83,7 @@ class localrepo {
   ## Build the "epel" repo
   localrepo::pkgsync { "epel_pkgs":
     pkglist  => template("localrepo/epel_pkgs.erb"),
-    repopath => "${base}/mirror/epel/6/local/$::architecture",
+    repopath => "${base}/mirror/epel/${::operatingsystemmajrelease}/local/$::architecture",
     syncer   => "yumdownloader",
     source   => "epel",
     notify   => Repobuild["epel_local"],
@@ -91,7 +91,7 @@ class localrepo {
   }
 
   localrepo::repobuild { "epel_local":
-    repopath => "${base}/mirror/epel/6/local/$::architecture",
+    repopath => "${base}/mirror/epel/${::operatingsystemmajrelease}/local/$::architecture",
     require  => Package["createrepo"],
     notify   => Exec["makecache"],
   }
