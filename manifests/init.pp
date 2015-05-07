@@ -64,6 +64,21 @@ class localrepo {
     require  => Package["createrepo"],
     notify   => Exec["makecache"],
   }
+  
+  ## Build the "extras" repo
+  localrepo::pkgsync { "extras_pkgs":
+    pkglist  => template("localrepo/estras_pkgs.erb"),
+    repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/extras/$::architecture",
+    syncer   => "yumdownloader",
+    source   => "base",
+    notify   => Repobuild["extras_local"],
+  }
+
+  localrepo::repobuild { "extras_local":
+    repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/extras/$::architecture",
+    require  => Package["createrepo"],
+    notify   => Exec["makecache"],
+  }
 
   ## Build the "updates" repo
   localrepo::pkgsync { "updates_pkgs":
