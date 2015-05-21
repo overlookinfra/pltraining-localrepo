@@ -37,7 +37,7 @@ class localrepo {
                    "${base}/mirror/centos",
                    "${base}/mirror/centos/${::operatingsystemmajrelease}",
                    "${base}/mirror/centos/${::operatingsystemmajrelease}/os",
-                   "${base}/mirror/centos/${::operatingsystemmajrelease}/updates", ]
+                   "${base}/mirror/centos/${::operatingsystemmajrelease}/updates",
                    "${base}/mirror/centos/${::operatingsystemmajrelease}/extras", ]
 
   File { mode => 644, owner => root, group => root }
