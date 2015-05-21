@@ -67,7 +67,7 @@ class localrepo {
   
   ## Build the "extras" repo
   localrepo::pkgsync { "extras_pkgs":
-    pkglist  => template("localrepo/estras_pkgs.erb"),
+    pkglist  => template("localrepo/extras_pkgs.erb"),
     repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/extras/$::architecture",
     syncer   => "yumdownloader",
     source   => "base",
