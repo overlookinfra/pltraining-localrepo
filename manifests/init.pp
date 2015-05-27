@@ -37,7 +37,8 @@ class localrepo {
                    "${base}/mirror/centos",
                    "${base}/mirror/centos/${::operatingsystemmajrelease}",
                    "${base}/mirror/centos/${::operatingsystemmajrelease}/os",
-                   "${base}/mirror/centos/${::operatingsystemmajrelease}/updates", ]
+                   "${base}/mirror/centos/${::operatingsystemmajrelease}/updates",
+                   "${base}/mirror/centos/${::operatingsystemmajrelease}/extras", ]
 
   File { mode => 644, owner => root, group => root }
 
@@ -61,6 +62,21 @@ class localrepo {
 
   localrepo::repobuild { "base_local":
     repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/os/$::architecture",
+    require  => Package["createrepo"],
+    notify   => Exec["makecache"],
+  }
+  
+  ## Build the "extras" repo
+  localrepo::pkgsync { "extras_pkgs":
+    pkglist  => template("localrepo/extras_pkgs.erb"),
+    repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/extras/$::architecture",
+    syncer   => "yumdownloader",
+    source   => "base",
+    notify   => Repobuild["extras_local"],
+  }
+
+  localrepo::repobuild { "extras_local":
+    repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/extras/$::architecture",
     require  => Package["createrepo"],
     notify   => Exec["makecache"],
   }

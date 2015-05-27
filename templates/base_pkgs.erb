@@ -1,3 +1,9 @@
+<% #Centos 7 specific packages %>
+<% if @operatingsystemmajrelease == "7" %>
+make
+policycoreutils-python
+<% end %>
+
 ConsoleKit
 ConsoleKit-libs
 GConf2
