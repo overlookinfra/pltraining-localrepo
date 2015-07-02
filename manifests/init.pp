@@ -47,7 +47,7 @@ class localrepo {
     recurse => true,
   }
 
-  package { 'createrepo':
+  package { ['createrepo','yum-utils']:
     ensure => present,
   }
 
