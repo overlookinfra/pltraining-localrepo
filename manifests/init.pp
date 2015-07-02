@@ -47,10 +47,6 @@ class localrepo {
     recurse => true,
   }
 
-  package { 'createrepo':
-    ensure => present,
-  }
-
   ## Build the "base" repo
   localrepo::pkgsync { "base_pkgs":
     pkglist  => template("localrepo/base_pkgs.erb"),
@@ -62,7 +58,7 @@ class localrepo {
 
   localrepo::repobuild { "base_local":
     repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/os/$::architecture",
-    require  => Package["createrepo"],
+    require  => Class['localrepo::packages'],
     notify   => Exec["makecache"],
   }
   
@@ -77,7 +73,7 @@ class localrepo {
 
   localrepo::repobuild { "extras_local":
     repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/extras/$::architecture",
-    require  => Package["createrepo"],
+    require  => Class['localrepo::packages'],
     notify   => Exec["makecache"],
   }
 
@@ -92,7 +88,7 @@ class localrepo {
 
   localrepo::repobuild { "updates_local":
     repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/updates/$::architecture",
-    require  => Package["createrepo"],
+    require  => Class['localrepo::packages'],
     notify   => Exec["makecache"],
   }
 
@@ -108,7 +104,7 @@ class localrepo {
 
   localrepo::repobuild { "epel_local":
     repopath => "${base}/mirror/epel/${::operatingsystemmajrelease}/local/$::architecture",
-    require  => Package["createrepo"],
+    require  => Class['localrepo::packages'],
     notify   => Exec["makecache"],
   }
 
