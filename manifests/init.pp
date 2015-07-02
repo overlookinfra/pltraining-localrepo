@@ -42,6 +42,8 @@ class localrepo {
 
   File { mode => 644, owner => root, group => root }
 
+  include localrepo::packages
+
   file { $directories:
     ensure => directory,
     recurse => true,
