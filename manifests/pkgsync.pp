@@ -29,7 +29,7 @@ define localrepo::pkgsync ($pkglist = $name, $source="", $server = "mirrors.cat.
 
 
   File {
-    mode  => 644,
+    mode  => '644',
     owner => root,
     group => root,
   }

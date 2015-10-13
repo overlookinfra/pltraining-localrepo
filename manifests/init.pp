@@ -40,7 +40,7 @@ class localrepo {
                    "${base}/mirror/centos/${::operatingsystemmajrelease}/updates",
                    "${base}/mirror/centos/${::operatingsystemmajrelease}/extras", ]
 
-  File { mode => 644, owner => root, group => root }
+  File { mode => '644', owner => root, group => root }
 
   include localrepo::packages
 
