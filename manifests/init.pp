@@ -55,7 +55,7 @@ class localrepo {
     repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/os/$::architecture",
     syncer   => "yumdownloader",
     source   => "base",
-    notify   => Repobuild["base_local"],
+    notify   => Localrepo::Repobuild["base_local"],
   }
 
   localrepo::repobuild { "base_local":
@@ -70,7 +70,7 @@ class localrepo {
     repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/extras/$::architecture",
     syncer   => "yumdownloader",
     source   => "base",
-    notify   => Repobuild["extras_local"],
+    notify   => Localrepo::Repobuild["extras_local"],
   }
 
   localrepo::repobuild { "extras_local":
@@ -85,7 +85,7 @@ class localrepo {
     repopath => "${base}/mirror/centos/${::operatingsystemmajrelease}/updates/$::architecture",
     syncer   => "yumdownloader",
     source   => "base",
-    notify   => Repobuild["updates_local"],
+    notify   => Localrepo::Repobuild["updates_local"],
   }
 
   localrepo::repobuild { "updates_local":
@@ -100,7 +100,7 @@ class localrepo {
     repopath => "${base}/mirror/epel/${::operatingsystemmajrelease}/local/$::architecture",
     syncer   => "yumdownloader",
     source   => "epel",
-    notify   => Repobuild["epel_local"],
+    notify   => Localrepo::Repobuild["epel_local"],
     require  => Class['epel']
   }
 
