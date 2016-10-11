@@ -1,0 +1,10 @@
+fixtures:
+  symlinks:
+    localrepo: "#{source_dir}"
+  forge_modules:
+    stdlib:
+      repo: "puppetlabs/stdlib"
+      ref: "4.12.0"
+    epel:
+      repo: "stahnma/epel"
+      ref: "1.2.2"
