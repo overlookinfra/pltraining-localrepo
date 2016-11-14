@@ -5,6 +5,12 @@ openssl-devel
 openssl-libs
 <% end %>
 
+<% if @build_name == "master" %>
+golang
+golang-bin
+golang-src
+<% end %>
+
 libjpeg-turbo
 libxml2
 libxml2-python

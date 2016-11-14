@@ -25,7 +25,9 @@
 #     repopath => "${base}/mirror/centos/6/os/$::architecture",
 #   }
 
-class localrepo {
+class localrepo (
+  $build_name = undef,
+){
 
   $base = "/var/yum"
 
