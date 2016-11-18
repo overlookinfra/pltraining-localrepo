@@ -13,6 +13,8 @@
 # resource that runs.  Suboptimal, yes and I think I am going to solve
 # this with a ruby manifest at some point.
 #
+# Warning: the wget syncer is *not* idempotent.
+#
 # Example:
 #   pkgsync { "base_pkgs":
 #     pkglist  => "httpd*\nperl-DBI*\nlibart_lgpl*\napr*\nruby-rdoc*\nntp*\n",
@@ -25,8 +27,14 @@
 #     repopath => "${base}/mirror/centos/5/os/$::architecture",
 #   }
 
-define localrepo::pkgsync ($pkglist = $name, $source="", $server = "mirrors.cat.pdx.edu", $syncer = "rsync", $syncops = "default", $repopath) {
-
+define localrepo::pkgsync (
+  $pkglist = $name,
+  $source  = "",
+  $server  = "mirrors.cat.pdx.edu",
+  $syncer  = "rsync",
+  $syncops = "default",
+  $repopath,
+) {
 
   File {
     mode  => '644',
@@ -41,6 +49,7 @@ define localrepo::pkgsync ($pkglist = $name, $source="", $server = "mirrors.cat.
     logoutput => 'on_failure',
     require   => [ File["${repopath}/RPMS"], File["/tmp/${name}list"] ],
   }
+
   file { "/tmp/${name}list":
     content => "${pkglist}",
     notify  => Exec["get_${name}"],
@@ -70,6 +79,16 @@ define localrepo::pkgsync ($pkglist = $name, $source="", $server = "mirrors.cat.
     }
     exec { "get_${name}":
       command => "${syncer} ${syncops_real} `cat /tmp/${name}list`",
+      require => Class['localrepo::packages'],
+    }
+  } elsif $syncer == "wget" {
+    if $syncops == "default" {
+      $syncops_real = ""
+    } else {
+      $syncops_real = $syncops
+    }
+    exec { "get_${name}":
+      command => "${syncer} ${syncops_real} -i /tmp/${name}list -P ${repopath}/RPMS",
       require => Class['localrepo::packages'],
     }
   } else {

@@ -13,6 +13,10 @@
 # resource that runs.  Suboptimal, yes and I think I am going to solve
 # this with a ruby manifest at some point.
 #
+# If you use a `syncer` of `wget`, just provide a list of URLs to download
+# each RPM file you care about. This will build a yumrepo for you with each
+# of those RPMs cached appropriately.
+#
 # Example:
 #   pkgsync { "base_pkgs":
 #     pkglist  => "httpd*\nperl-DBI*\nlibart_lgpl*\napr*\nruby-rdoc*\nntp*\n",
@@ -40,7 +44,10 @@ class localrepo (
                    "${base}/mirror/centos/${::operatingsystemmajrelease}",
                    "${base}/mirror/centos/${::operatingsystemmajrelease}/os",
                    "${base}/mirror/centos/${::operatingsystemmajrelease}/updates",
-                   "${base}/mirror/centos/${::operatingsystemmajrelease}/extras", ]
+                   "${base}/mirror/centos/${::operatingsystemmajrelease}/extras",
+                   "${base}/mirror/classroom",
+                   "${base}/mirror/classroom/${::operatingsystemmajrelease}",
+                   "${base}/mirror/classroom/${::operatingsystemmajrelease}/local", ]
 
   File { mode => '644', owner => root, group => root }
 
@@ -65,7 +72,7 @@ class localrepo (
     require  => Class['localrepo::packages'],
     notify   => Exec["makecache"],
   }
-  
+
   ## Build the "extras" repo
   localrepo::pkgsync { "extras_pkgs":
     pkglist  => template("localrepo/extras_pkgs.erb"),
@@ -108,6 +115,20 @@ class localrepo (
 
   localrepo::repobuild { "epel_local":
     repopath => "${base}/mirror/epel/${::operatingsystemmajrelease}/local/$::architecture",
+    require  => Class['localrepo::packages'],
+    notify   => Exec["makecache"],
+  }
+
+  ## Build the "classroom" repo of misc RPMs
+  localrepo::pkgsync { "classroom_pkgs":
+    pkglist  => template("localrepo/classroom_pkgs.erb"),
+    repopath => "${base}/mirror/classroom/${::operatingsystemmajrelease}/local/$::architecture",
+    syncer   => "wget",
+    notify   => Localrepo::Repobuild["classroom"],
+  }
+
+  localrepo::repobuild { "classroom":
+    repopath => "${base}/mirror/classroom/${::operatingsystemmajrelease}/local/$::architecture",
     require  => Class['localrepo::packages'],
     notify   => Exec["makecache"],
   }
