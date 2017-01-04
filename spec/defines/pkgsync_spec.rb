@@ -11,6 +11,10 @@ describe 'localrepo::pkgsync' do
     :architecture              => 'x86_64',
   } }
 
+  let(:params) { {
+      :repopath => '/var/yum/x86_64',
+  } }
+
   it {
     is_expected.to contain_file("/tmp/curl") }
       #.with({
